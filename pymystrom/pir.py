@@ -11,14 +11,14 @@ URI_PIR = URL("api/v1/")
 class MyStromPir:
     """A class for a myStrom PIR."""
 
-    def __init__(self, host: str, session: aiohttp.client.ClientSession = None) -> None:
+    def __init__(self, host: str, session: aiohttp.client.ClientSession | None = None) -> None:
         """Initialize the switch."""
         self._close_session = False
         self._host = host
         self._session = session
-        self._intensity = None
+        self._intensity: Optional[float | int] = None
         self._day = None
-        self._light_raw = None
+        self._light_raw = Optional[Dict[str, int]]
         self._sensors = None
         self._temperature_measured = None
         self._temperature_compensated = None
@@ -130,7 +130,7 @@ class MyStromPir:
         return self._motion
 
     @property
-    def intensity(self) -> Optional[str]:
+    def intensity(self) -> Optional[float | int]:
         """Return the intensity reported by the light sensor."""
         return self._intensity
 
@@ -140,11 +140,11 @@ class MyStromPir:
         return self._day
 
     @property
-    def light_raw(self) -> Optional[str]:
+    def light_raw(self) -> Dict[str, Optional[int]]:
         """Return the raw data from the ADC."""
         return {
-            "visible": self._light_raw["adc0"],
-            "infrared": self._light_raw["adc1"],
+            "visible": getattr(self._light_raw, "adc0"),
+            "infrared": getattr(self._light_raw, "adc1"),
         }
 
     async def close(self) -> None:

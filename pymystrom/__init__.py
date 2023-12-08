@@ -17,7 +17,7 @@ USER_AGENT = f"PythonMyStrom/{__version__}"
 
 async def _request(
     self,
-    uri: str,
+    uri: str | URL,
     method: str = "GET",
     data: Optional[Any] = None,
     json_data: Optional[dict] = None,
