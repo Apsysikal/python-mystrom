@@ -34,7 +34,7 @@ async def _request(
         self._close_session = True
 
     try:
-        with async_timeout.timeout(TIMEOUT):
+        async with async_timeout.timeout(TIMEOUT):
             response = await self._session.request(
                 method,
                 uri,
@@ -69,7 +69,7 @@ class MyStromDevice:
     def __init__(
         self,
         host,
-        session: aiohttp.client.ClientSession = None,
+        session: Optional[aiohttp.client.ClientSession] = None,
     ):
         """Initialize the device."""
         self._close_session = False
