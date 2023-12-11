@@ -31,58 +31,42 @@ async def cli(aiohttp_client) -> TestClient:
 
     return await aiohttp_client(app)
 
-async def test_get_settings(cli):
+@pytest.fixture
+async def pir(cli) -> MyStromPir:
     host = f"{cli.host}:{cli.port}"
-    device = MyStromPir(host=host, session=cli.session)
+    return MyStromPir(host=host, session=cli.session)
 
-    await device.get_settings()
+async def test_get_settings(cli, pir):
+    await pir.get_settings()
 
     cli.app[MOCK_KEY].assert_called_with("/api/v1/settings")
 
-async def test_get_actions(cli):
-    host = f"{cli.host}:{cli.port}"
-    device = MyStromPir(host=host, session=cli.session)
-
-    await device.get_actions()
+async def test_get_actions(cli, pir):
+    await pir.get_actions()
 
     cli.app[MOCK_KEY].assert_called_with("/api/v1/action")
 
-async def test_get_pir(cli):
-    host = f"{cli.host}:{cli.port}"
-    device = MyStromPir(host=host, session=cli.session)
-
-    await device.get_pir()
+async def test_get_pir(cli, pir):
+    await pir.get_pir()
 
     cli.app[MOCK_KEY].assert_called_with("/api/v1/settings/pir")
 
-async def test_get_sensors_state(cli):
-    host = f"{cli.host}:{cli.port}"
-    device = MyStromPir(host=host, session=cli.session)
-
-    await device.get_sensors_state()
+async def test_get_sensors_state(cli, pir):
+    await pir.get_sensors_state()
 
     cli.app[MOCK_KEY].assert_called_with("/api/v1/sensors")
 
-async def test_get_temperatures(cli):
-    host = f"{cli.host}:{cli.port}"
-    device = MyStromPir(host=host, session=cli.session)
-
-    await device.get_temperatures()
+async def test_get_temperatures(cli, pir):
+    await pir.get_temperatures()
 
     cli.app[MOCK_KEY].assert_called_with("/temp")
 
-async def test_get_motion(cli):
-    host = f"{cli.host}:{cli.port}"
-    device = MyStromPir(host=host, session=cli.session)
-
-    await device.get_motion()
+async def test_get_motion(cli, pir):
+    await pir.get_motion()
 
     cli.app[MOCK_KEY].assert_called_with("/api/v1/motion")
 
-async def test_get_light(cli):
-    host = f"{cli.host}:{cli.port}"
-    device = MyStromPir(host=host, session=cli.session)
-
-    await device.get_light()
+async def test_get_light(cli, pir):
+    await pir.get_light()
 
     cli.app[MOCK_KEY].assert_called_with("/api/v1/light")
